@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css.css">
+
+</head>
+<body onload="tau.creatShip()">
+<audio src="image/tttttt.mp3"autoplay loop></audio>
+
+<script src="js/drop.js"></script>
+
+<script src="js/chicken.js"></script>
+<script src="js/ship.js"></script>
+<div id="vc">
+    <p id="score">score: </p>
+    <canvas id="myCanvas" width="600px" height="400px" style="border: 1px solid #1221"></canvas><br>
+    <button onclick="reload()"id="rrr">restart</button>
+</div>
+
+
+<script>
+    let isPlaying=true;
+    let score=document.getElementById('score');
+    let canvas = document.getElementById('myCanvas');
+    let pen = canvas.getContext('2d');
+    let x = canvas.width/2;
+    let y = 350;
+    let w = 40;
+    let h = 40
+    let tau = new ship(x, y, w, h);
+    tau.creatShip()
+    function randomNumber(min, max) {
+        return Math.floor(Math.random() * max - min) + min;
+    }
+
+let tt=0;
+    let cG=[];
+    let cou=0;
+    let time=20;
+    function drawG(number){
+        let a=randomNumber(0,600);
+        let  b=randomNumber(-30,-10);
+        let c=30;
+        let d=30;
+      cou++;
+      if(cou>time){
+            let ga=new Chicken(a,b,c,d);
+            ga.drawGa()
+            cG.push(ga);
+            cou=0;
+        }
+        for (let i = 0; i < cG.length; i++) {
+            if(cG[i].y+d>=canvas.height){
+                cG.splice(i,1);
+                tt++
+            }
+            else {
+                cG[i].moveGa();
+                cG[i].drawGa()
+            }
+
+            }if (tt>10){
+            pen.font="30px Arial";
+            pen.fillText("game over  ",250,200);
+            pen.fillStyle='red';
+            pen.fill()
+            isPlaying=false;
+
+        }
+
+    }
+
+    function clearScreen(){
+        pen.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    function main() {
+        if (!isPlaying) return;
+        clearScreen();
+        checkCrash();
+        drawG()
+        tau.creatShip();
+        tau.shoot();
+checkTau()
+    }
+    setInterval(main,30);
+    let diem=0;
+
+function checkCrash(){
+    for (let i = 0; i < cG.length; i++) {
+        for (let j = 0; j < tau.bullets.length; j++) {
+            if(tau.bullets[j].x+w<cG[i].x||
+                tau.bullets[j].x>cG[i].x+w||
+                tau.bullets[j].y>cG[i].y+h){
+                break;
+            }
+            else {
+               tau.bullets.splice(j,1);
+               cG.splice(i,1);
+               i--;
+               diem++;
+                document.getElementById('score').innerHTML ="score:"+ diem;
+               break;
+            }
+
+        }
+    }
+}
+function checkTau(){
+    for (let i = 0; i < cG.length; i++) {
+        if (tau.x+w<cG[i].x||
+            tau.x -20>cG[i].x+w||
+            tau.y+50>cG[i].y+h
+        ){
+            break;
+        }
+        else {
+          pen.font="30px Arial";
+          pen.fillText("game over  ",250,200);
+            pen.fillStyle='red';
+            pen.fill()
+          isPlaying=false;
+        }
+    }
+}
+function reload(){
+    location.reload()
+}
+</script>
+</body>
+</html>
